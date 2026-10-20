@@ -25,7 +25,11 @@ enum WorkoutBuilder {
     }
 
     static func step(_ p: Passo) -> WorkoutStep {
-        WorkoutStep(goal: goal(p), alert: alert(p), displayName: p.nome)
+        // il nome del passo esiste solo da iOS 18
+        if #available(iOS 18.0, *), let n = p.nome {
+            return WorkoutStep(goal: goal(p), alert: alert(p), displayName: n)
+        }
+        return WorkoutStep(goal: goal(p), alert: alert(p))
     }
 
     static func plan(_ w: FormaWorkout) -> WorkoutPlan {
