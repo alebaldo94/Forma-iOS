@@ -53,7 +53,7 @@ final class Session: ObservableObject {
     func allineaWatch() async {
         guard WorkoutScheduler.isSupported else { messaggio = "Questo dispositivo non supporta gli allenamenti programmati"; return }
         let scheduler = WorkoutScheduler.shared
-        var stato = scheduler.authorizationState
+        var stato = await scheduler.authorizationState
         if stato == .notDetermined { stato = await scheduler.requestAuthorization() }
         guard stato == .authorized else { messaggio = "Consenti a Forma di programmare allenamenti: Impostazioni > Salute"; return }
 
