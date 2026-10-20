@@ -1,0 +1,24 @@
+name: build
+on:
+  push:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Xcode
+        run: xcodebuild -version
+      - name: Genera il progetto
+        run: brew install xcodegen && xcodegen
+      - name: Compila (simulatore, senza firma)
+        run: |
+          set -o pipefail
+          xcodebuild -project Forma.xcodeproj -scheme Forma -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build 2>&1 | tee build.log
+      - name: Log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-log
+          path: build.log
